@@ -1,5 +1,9 @@
 #import "FFFastImageView.h"
 
+#import <React/RCTLog.h>
+#import <SDWebImage/SDImageCache.h>
+
+
 @interface FFFastImageView()
 
 @property (nonatomic, assign) BOOL hasSentOnLoadStart;
@@ -85,10 +89,11 @@
     }
 }
 
-- (void)sendOnLoad:(UIImage *)image {
+- (void)sendOnLoad:(UIImage *)image filePath:(NSString * _Nullable) filePath {
     self.onLoadEvent = @{
                          @"width":[NSNumber numberWithDouble:image.size.width],
-                         @"height":[NSNumber numberWithDouble:image.size.height]
+                         @"height":[NSNumber numberWithDouble:image.size.height],
+                         @"filePath": filePath,
                          };
     if (self.onFastImageLoad) {
         self.onFastImageLoad(self.onLoadEvent);
@@ -133,7 +138,7 @@
                                            });
             }
             self.hasCompleted = YES;
-            [self sendOnLoad:image];
+            [self sendOnLoad:image filePath:NULL];
             
             if (self.onFastImageLoadEnd) {
                 self.onFastImageLoadEnd(@{});
@@ -209,8 +214,26 @@
                                     weakSelf.onFastImageLoadEnd(@{});
                                 }
                         } else {
-                            weakSelf.hasCompleted = YES;
-                            [weakSelf sendOnLoad:image];
+                            SDImageCache *imageCache = [SDImageCache sharedImageCache];
+                            NSArray *arrayOfPathComponents = [NSArray arrayWithObjects: 
+                                [imageCache cachePathForKey:imageURL.absoluteString],
+                                // [imageCache cachedFileNameForKey:targetURL],
+                                nil
+                            ];
+                            NSString* path = [NSString pathWithComponents: arrayOfPathComponents];
+                            NSURL *urlOfTheLocalFile = [NSURL fileURLWithPath: path];                            
+
+                            NSString* urlString = urlOfTheLocalFile.absoluteString;
+
+                            NSLog(@"IMAGE ?? %@", urlOfTheLocalFile);
+
+                            [weakSelf sendOnLoad:image filePath:urlString];
+
+
+
+
+
+
                             if (weakSelf.onFastImageLoadEnd) {
                                 weakSelf.onFastImageLoadEnd(@{});
                             }
