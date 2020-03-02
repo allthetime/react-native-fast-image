@@ -1,4 +1,13 @@
 <h1 align="center">
+  FORKED!!!!!!!!!!!!
+</h1>
+
+<h4>
+   Sloppily added `filePath` to `onLoad` event data (`nativeEvent`) so that the actual location of the cached image on the phone can be known and accessbile from JS.
+</h4>
+
+
+<h1 align="center">
   🚩 FastImage
 </h1>
 
