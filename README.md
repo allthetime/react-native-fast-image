@@ -3,7 +3,7 @@
 </h1>
 
 <h4>
-   Sloppily added `filePath` to `onLoad` event data (`nativeEvent`) so that the actual location of the cached image on the phone can be known and accessbile from JS.
+  Sloppily added <code>filePath</code> to <code>onLoad</code> event data (<code>nativeEvent</code>) so that the actual location of the cached image on the phone can be known and accessbile from JS.
 </h4>
 
 
